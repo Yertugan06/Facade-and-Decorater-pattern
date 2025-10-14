@@ -8,7 +8,7 @@ public class CreditCardPayment implements Payment {
         this.asset = asset;
     }
     public CreditCardPayment() {
-        this(500,50);
+        this(50,5000);
     }
     @Override
     public void pay(double amount) {

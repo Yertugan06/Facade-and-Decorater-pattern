@@ -7,6 +7,10 @@ public class PayPalPayment implements Payment {
         this.asset = asset;
         this.cashback = cashback;
     }
+
+    public PayPalPayment() {
+        this(50,5000);
+    }
     @Override
     public void pay(double amount) {
         if (asset + cashback >= amount){
@@ -34,4 +38,6 @@ public class PayPalPayment implements Payment {
     public void add_money(double amount) {
         asset += amount;
     }
+
+
 }

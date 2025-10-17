@@ -16,11 +16,11 @@ public class ConsoleUI {
         while (true) {
             System.out.println("""
                 \n===== MENU =====
-                1️⃣ Make Payment
-                2️⃣ Add Money to Card
-                3️⃣ Add New Payment Method
-                4️⃣ View Customer Info
-                0️⃣ Exit
+                1 Make Payment
+                2️ Add Money to Card
+                3️ Add New Payment Method
+                4️ View Customer Info
+                0️ Exit
                 """);
 
             System.out.print("Select option: ");
@@ -114,7 +114,7 @@ public class ConsoleUI {
     }
 
     private void showCustomerInfo() {
-        System.out.println("\n👤 " + customer);
+        System.out.println("\n " + customer);
         customer.showPaymentMethods();
     }
 }

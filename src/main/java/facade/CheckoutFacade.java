@@ -19,18 +19,18 @@ public class CheckoutFacade {
 
         decorated = new FraudDetectionDecorator(decorated);
 
-        System.out.println("\n🛒 ---- Checkout Started ----");
+        System.out.println("\nCheckout Started");
         decorated.pay(amount);
         sendReceipt(amount);
         sendNotification();
-        System.out.println("✅ ---- Checkout Completed ----\n");
+        System.out.println("Checkout Completed\n");
     }
 
     private void sendReceipt(double amount) {
-        System.out.printf("🧾 Receipt: Payment of $%.2f processed.%n", amount);
+        System.out.printf("Receipt: Payment of $%.2f processed.%n", amount);
     }
 
     private void sendNotification() {
-        System.out.println("📩 Notification: Thank you for shopping with us!");
+        System.out.println("Notification: Thank you for shopping with us!");
     }
 }

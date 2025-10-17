@@ -16,15 +16,14 @@ public class ConsoleUI {
         while (true) {
             System.out.println("""
                 \n===== MENU =====
-                1 Make Payment
-                2️ Add Money to Card
-                3️ Add New Payment Method
-                4️ View Customer Info
-                0️ Exit
+                1. Make Payment
+                2. Add Money to Card
+                3. Add New Payment Method
+                4. View Customer Info
+                0. Exit
                 """);
 
-            System.out.print("Select option: ");
-            int choice = sc.nextInt();
+            int choice = readInt("Select option: ");
 
             switch (choice) {
                 case 1 -> handlePayment();
@@ -35,16 +34,14 @@ public class ConsoleUI {
                     System.out.println("Goodbye, " + customer.getName() + "!");
                     return;
                 }
-                default -> System.out.println("Invalid option!");
+                default -> System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
     private void initCustomer() {
         System.out.print("Enter your name: ");
-        sc.nextLine(); // clear buffer
         String name = sc.nextLine();
-
         customer = new Customer(name);
         addPaymentMethod();
     }
@@ -54,22 +51,36 @@ public class ConsoleUI {
             Choose type:
             1. Credit Card
             2. PayPal
+            3. New Card Type
             """);
-        int type = sc.nextInt();
+        int type = readInt("Select: ");
         sc.nextLine(); // clear buffer
 
-        if (type == 1) {
-            System.out.print("Enter card name: ");
-            String cardName = sc.nextLine();
-            System.out.print("Enter starting balance: ");
-            double balance = sc.nextDouble();
-            customer.addPaymentMethod(new CreditCardPayment(cardName, balance));
-        } else {
-            System.out.print("Enter PayPal email: ");
-            String email = sc.nextLine();
-            System.out.print("Enter starting balance: ");
-            double balance = sc.nextDouble();
-            customer.addPaymentMethod(new PayPalPayment(email, balance));
+        try {
+            switch (type) {
+                case 1 -> {
+                    System.out.print("Enter card name: ");
+                    String cardName = sc.nextLine();
+                    double balance = readDouble("Enter starting balance: ");
+                    customer.addPaymentMethod(new CreditCardPayment(cardName, balance));
+                }
+                case 2 -> {
+                    System.out.print("Enter PayPal email: ");
+                    String email = sc.nextLine();
+                    double balance = readDouble("Enter starting balance: ");
+                    customer.addPaymentMethod(new PayPalPayment(email, balance));
+                }
+                case 3 -> {
+                    System.out.print("Enter card name: ");
+                    String cardName = sc.nextLine();
+                    double balance = readDouble("Enter starting balance: ");
+                    customer.addPaymentMethod(new NewCardPayment(cardName, balance));
+                }
+                default -> System.out.println("Invalid option. No method added.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Payment method not added.");
+            sc.nextLine(); // clear invalid input
         }
     }
 
@@ -81,7 +92,7 @@ public class ConsoleUI {
 
         System.out.println("Choose payment method:");
         customer.showPaymentMethods();
-        int idx = sc.nextInt() - 1;
+        int idx = readInt("Enter method number: ") - 1;
 
         if (idx < 0 || idx >= customer.getPaymentMethods().size()) {
             System.out.println("Invalid choice, using first card.");
@@ -94,27 +105,45 @@ public class ConsoleUI {
         Payment method = choosePaymentMethod();
         CheckoutFacade checkout = new CheckoutFacade(method);
 
-        System.out.print("Enter amount: ");
-        double amount = sc.nextDouble();
-
-        System.out.print("Enter discount %: ");
-        double discount = sc.nextDouble();
-
-        System.out.print("Enter cashback %: ");
-        double cashback = sc.nextDouble();
+        double amount = readDouble("Enter amount: ");
+        double discount = readDouble("Enter discount %: ");
+        double cashback = readDouble("Enter cashback %: ");
 
         checkout.processPayment(amount, discount, cashback);
     }
 
     private void handleAddMoney() {
         Payment method = choosePaymentMethod();
-        System.out.print("Enter amount to add: ");
-        double amount = sc.nextDouble();
+        double amount = readDouble("Enter amount to add: ");
         method.addMoney(amount);
     }
 
     private void showCustomerInfo() {
-        System.out.println("\n " + customer);
+        System.out.println("\n" + customer);
         customer.showPaymentMethods();
+    }
+
+    private int readInt(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("You have to enter Integer number");
+                sc.nextLine();
+            }
+        }
+    }
+
+    private double readDouble(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return sc.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("You have to enter Double number");
+                sc.nextLine();
+            }
+        }
     }
 }
